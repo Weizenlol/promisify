@@ -1,0 +1,11 @@
+{
+    "name": "promisify",
+    "version": "0.0.1",
+    "private": true,
+    "devDependencies": {
+        "tape": "*"
+    },
+    "scripts": {
+        "test": "node_modules/.bin/tape tests/test.js"
+    }
+}
