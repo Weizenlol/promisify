@@ -53,4 +53,21 @@ Promisify.chainForce = function (promiseMethods) {
     }, Promise.resolve());
 };
 
+
+Promisify.defer = function(instance, ready, methods) {
+    methods.forEach(function (method) {
+        if (instance[method] && !instance.hasOwnProperty(method)) {
+            instance[method] = function () {
+                var args = arguments;
+                ready.then(function () {
+                    methods.forEach(function (method) {
+                        delete instance[method];
+                    });
+                    instance[method].apply(instance, args);
+                });
+            };
+        }
+    });
+};
+
 module.exports = Promisify;
