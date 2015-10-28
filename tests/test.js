@@ -30,6 +30,14 @@ promiseApi.dataChain = function (arg) {
     });
 };
 
+promiseApi.data = function (arg) {
+    return new Promise(function (resolve, reject) {
+        setTimeout(function(){
+            resolve(arg);
+        }, 1000);
+    });
+};
+
 promiseApi.dataChainWithAck = function (ackCallback) {
     return new Promise(function (resolve, reject) {
         setTimeout(function(){
@@ -81,5 +89,35 @@ test('force chain test', function (t) {
         t.ok(true, "final resolve");
     }).catch(function(){
         t.fail("No rejection allowed for this test.");
+    });
+});
+
+test('first in chain test 1', function (t) {
+    t.plan(1);
+    var promiseFabricChain = [
+        promiseApi.reject1,
+        promiseApi.data.bind(promiseApi, "resolved"),
+        promiseApi.reject1
+    ];
+    var finalPromise = promisify.firstInChain(promiseFabricChain);
+    finalPromise.then(function (data) {
+        t.equal("resolved", data);
+    }).catch(function(){
+        t.fail("No rejection allowed for this test.");
+    });
+});
+
+test('first in chain test 2', function (t) {
+    t.plan(1);
+    var promiseFabricChain = [
+        promiseApi.reject1,
+        promiseApi.reject1,
+        promiseApi.reject1
+    ];
+    var finalPromise = promisify.firstInChain(promiseFabricChain);
+    finalPromise.then(function (data) {
+        t.fail("No resolve allowed for this test.");
+    }).catch(function(){
+        t.pass("All promises rejected, OK!");
     });
 });

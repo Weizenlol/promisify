@@ -17,7 +17,7 @@ var Promisify = {};
  * @returns Promise
  */
 Promisify.firstInChain = function (promiseMethods, errHandler) {
-    return promiseList.reduce(function(current, next){
+    return promiseMethods.reduce(function(current, next){
         return current.catch(function(err){
             (typeof errHandler === "function") && errHandler(err);
             return next();
