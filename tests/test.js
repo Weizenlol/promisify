@@ -55,6 +55,23 @@ promiseApi.staticData = function (arg) {
     });
 };
 
+var DummyObject = function () {
+
+};
+DummyObject.prototype.method1 = function (cb) {
+    cb();
+};
+
+DummyObject.prototype.method2 = function (cb) {
+    cb();
+};
+
+DummyObject.prototype.method3 = function (cb) {
+    cb();
+};
+
+var dummyObject = new DummyObject();
+
 test('chain resolve test', function (t) {
     t.plan(1);
     var promiseFabricChain = [promiseApi.dataChain.bind(promiseApi, 0), promiseApi.dataChain, promiseApi.dataChain, promiseApi.dataChain];
@@ -119,5 +136,37 @@ test('first in chain test 2', function (t) {
         t.fail("No resolve allowed for this test.");
     }).catch(function(){
         t.pass("All promises rejected, OK!");
+    });
+});
+
+test('defer test', function (t) {
+    t.plan(3);
+    var startTime = Date.now();
+    var done = promiseApi.data(null);
+    promisify.defer(dummyObject, done, ['method1', 'method2']);
+    dummyObject.method1(function () {
+        var endTime = Date.now(),
+            timeSpend = (endTime - startTime);
+        if(timeSpend < 1000){
+            t.fail('Method called before timeout ' + timeSpend);
+        } else {
+            t.pass('Method called after timeout ' + timeSpend);
+        }
+    });
+    dummyObject.method2(function () {
+        var endTime = Date.now(),
+            timeSpend = (endTime - startTime);
+        if(timeSpend < 1000){
+            t.fail('Method called before timeout ' + timeSpend);
+        } else {
+            t.pass('Method called after timeout ' + timeSpend);
+        }
+    });
+    dummyObject.method3(function () {
+        if((Date.now() - startTime) > 100){
+            t.fail('Method called after timeout');
+        } else {
+            t.pass('Method called before timeout');
+        }
     });
 });

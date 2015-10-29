@@ -53,7 +53,13 @@ Promisify.chainForce = function (promiseMethods) {
     }, Promise.resolve());
 };
 
-
+/**
+ * Defer method calls.
+ *
+ * @param {Object} instance
+ * @param {Promise} ready
+ * @param {string[]}methods
+ */
 Promisify.defer = function(instance, ready, methods) {
     methods.forEach(function (method) {
         if (instance[method] && !instance.hasOwnProperty(method)) {
