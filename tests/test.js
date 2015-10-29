@@ -147,7 +147,7 @@ test('defer test', function (t) {
     dummyObject.method1(function () {
         var endTime = Date.now(),
             timeSpend = (endTime - startTime);
-        if(timeSpend < 1000){
+        if(timeSpend < 950){
             t.fail('Method called before timeout ' + timeSpend);
         } else {
             t.pass('Method called after timeout ' + timeSpend);
@@ -156,7 +156,7 @@ test('defer test', function (t) {
     dummyObject.method2(function () {
         var endTime = Date.now(),
             timeSpend = (endTime - startTime);
-        if(timeSpend < 1000){
+        if(timeSpend < 950){
             t.fail('Method called before timeout ' + timeSpend);
         } else {
             t.pass('Method called after timeout ' + timeSpend);
